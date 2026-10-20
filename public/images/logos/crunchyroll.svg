@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520">
+  <rect width="900" height="520" rx="32" fill="#111"/>
+  <circle cx="288" cy="260" r="112" fill="#f47521"/>
+  <circle cx="288" cy="260" r="69" fill="none" stroke="#fff" stroke-width="15"/>
+  <path d="M240 280c23-47 72-67 119-49-9 43-48 78-94 78" fill="#fff"/>
+  <text x="590" y="252" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="53" font-weight="800" letter-spacing="-2">crunchyroll</text>
+  <text x="590" y="313" text-anchor="middle" fill="#f47521" font-family="Arial,sans-serif" font-size="27" font-weight="700" letter-spacing="7">ANIME STREAMING</text>
+</svg>

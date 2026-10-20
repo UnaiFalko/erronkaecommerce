@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#173a76"/><stop offset="1" stop-color="#08152e"/></linearGradient>
+    <linearGradient id="gold" x2="0" y2="1"><stop stop-color="#ffe868"/><stop offset="1" stop-color="#ffad18"/></linearGradient>
+  </defs>
+  <rect width="900" height="520" rx="32" fill="url(#sky)"/>
+  <circle cx="450" cy="205" r="112" fill="#fff" stroke="#0a1325" stroke-width="18"/>
+  <path d="M338 205a112 112 0 0 1 224 0H338Z" fill="#ed3d43"/>
+  <path d="M338 205h224" stroke="#0a1325" stroke-width="18"/>
+  <circle cx="450" cy="205" r="27" fill="#fff" stroke="#0a1325" stroke-width="14"/>
+  <text x="450" y="390" text-anchor="middle" fill="url(#gold)" stroke="#15264e" stroke-width="7" paint-order="stroke" font-family="Arial,sans-serif" font-size="75" font-weight="900" letter-spacing="3">POKEMON GO</text>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#172b48"/><stop offset="1" stop-color="#07101d"/></linearGradient></defs>
+  <rect width="900" height="520" rx="32" fill="url(#bg)"/>
+  <text x="450" y="258" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="98" font-weight="700" letter-spacing="-5">prime</text>
+  <text x="450" y="332" text-anchor="middle" fill="#48b9ef" font-family="Arial,sans-serif" font-size="45" font-weight="800" letter-spacing="10">VIDEO</text>
+  <path d="M320 378c96 63 190 63 278 4" fill="none" stroke="#48b9ef" stroke-width="10" stroke-linecap="round"/>
+  <path d="m575 361 34 20-34 16" fill="none" stroke="#48b9ef" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

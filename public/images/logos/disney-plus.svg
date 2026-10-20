@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#172e66"/><stop offset="1" stop-color="#070d25"/></linearGradient></defs>
+  <rect width="900" height="520" rx="32" fill="url(#bg)"/>
+  <path d="M245 188c98-126 312-126 410 0" fill="none" stroke="#58c5ff" stroke-width="10"/>
+  <text x="450" y="300" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="102" font-weight="700" font-style="italic" letter-spacing="-7">Disney+</text>
+  <text x="450" y="376" text-anchor="middle" fill="#9bcfff" font-family="Arial,sans-serif" font-size="31" font-weight="700" letter-spacing="10">STREAMING</text>
+</svg>

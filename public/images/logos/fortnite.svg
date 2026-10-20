@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520">
+  <defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#19a8de"/><stop offset="1" stop-color="#263a83"/></linearGradient></defs>
+  <rect width="900" height="520" rx="32" fill="url(#bg)"/>
+  <path d="M0 360 155 245l115 78 130-151 121 128 130-95 249 171v144H0Z" fill="#1e2c5b" opacity=".7"/>
+  <text x="450" y="282" text-anchor="middle" fill="#fff" stroke="#24325e" stroke-width="8" paint-order="stroke" font-family="Arial,sans-serif" font-size="108" font-weight="1000" letter-spacing="-3">FORTNITE</text>
+  <path d="M340 324h220" stroke="#ffe24b" stroke-width="9"/>
+</svg>

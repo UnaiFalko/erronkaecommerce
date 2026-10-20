@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520">
+  <rect width="900" height="520" rx="32" fill="#111"/>
+  <circle cx="290" cy="250" r="118" fill="none" stroke="#fff" stroke-width="13"/>
+  <text x="290" y="235" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="65" font-weight="900">EA</text>
+  <text x="290" y="284" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="4">SPORTS</text>
+  <path d="M478 150h190v30H510v58h138v30H510v70h158v32H478Z" fill="#fff"/>
+  <text x="575" y="423" text-anchor="middle" fill="#c5ff00" font-family="Arial,sans-serif" font-size="34" font-weight="800" letter-spacing="8">ULTIMATE TEAM</text>
+</svg>

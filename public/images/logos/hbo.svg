@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#21104b"/><stop offset="1" stop-color="#090817"/></linearGradient></defs>
+  <rect width="900" height="520" rx="32" fill="url(#bg)"/>
+  <text x="450" y="300" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="166" font-weight="900" letter-spacing="-10">HBO</text>
+  <path d="M235 356h430" stroke="#a785ff" stroke-width="9"/>
+  <text x="450" y="416" text-anchor="middle" fill="#c8baff" font-family="Arial,sans-serif" font-size="31" font-weight="700" letter-spacing="12">MAX ORIGINALS</text>
+</svg>
