@@ -1,7 +1,7 @@
 <section class="catalog-hero">
-    <p class="eyebrow">WinaDenda · Servicios digitales</p>
-    <h1>Recargas, boosting y cuentas</h1>
-    <p>Encuentra servicios digitales para tus juegos y plataformas favoritas.</p>
+    <p class="eyebrow">WinaDenda · <?= tr('Servicios digitales', 'Zerbitzu digitalak') ?></p>
+    <h1><?= tr('Recargas, boosting y cuentas', 'Kargak, boosting-a eta kontuak') ?></h1>
+    <p><?= tr('Encuentra servicios digitales para tus juegos y plataformas favoritas.', 'Aurkitu zure joko eta plataforma gogokoenetarako zerbitzu digitalak.') ?></p>
 </section>
 
 <?php
@@ -11,64 +11,64 @@ $favoritosUrl = 'index.php?' . http_build_query($parametrosCatalogo + ['kategori
 ?>
 <form class="filters" method="get" action="index.php">
     <label class="filter-control filter-search">
-        Buscar servicios
-        <input type="search" name="q" placeholder="Ej. monedas, cuenta, boosting" value="<?= e($bilaketa) ?>">
+        <?= tr('Buscar servicios', 'Zerbitzuak bilatu') ?>
+        <input type="search" name="q" placeholder="<?= tr('Ej. monedas, cuenta, boosting', 'Adib. txanponak, kontua, boosting-a') ?>" value="<?= e($bilaketa) ?>">
     </label>
     <label class="filter-control">
-        Categoría
+        <?= tr('Categoría', 'Kategoria') ?>
         <select name="kategoria">
-            <option value="">Todas las categorías</option>
+            <option value=""><?= tr('Todas las categorías', 'Kategoria guztiak') ?></option>
             <?php foreach ($kategoriak as $k): ?>
                 <option value="<?= (int) $k['id'] ?>" <?= $kategoriaId === (int) $k['id'] ? 'selected' : '' ?>>
-                    <?= e($k['izena']) ?>
+                    <?= e(categoryLabel($k['izena'])) ?>
                 </option>
             <?php endforeach; ?>
         </select>
     </label>
     <label class="filter-control">
-        Ordenar por
+        <?= tr('Ordenar por', 'Ordenatu') ?>
         <select name="orden">
-            <option value="recientes" <?= $orden === 'recientes' ? 'selected' : '' ?>>Más recientes</option>
-            <option value="precio_menor" <?= $orden === 'precio_menor' ? 'selected' : '' ?>>Precio: menor a mayor</option>
-            <option value="precio_mayor" <?= $orden === 'precio_mayor' ? 'selected' : '' ?>>Precio: mayor a menor</option>
-            <option value="nombre" <?= $orden === 'nombre' ? 'selected' : '' ?>>Nombre: A-Z</option>
+            <option value="recientes" <?= $orden === 'recientes' ? 'selected' : '' ?>><?= tr('Más recientes', 'Berrienak') ?></option>
+            <option value="precio_menor" <?= $orden === 'precio_menor' ? 'selected' : '' ?>><?= tr('Precio: menor a mayor', 'Prezioa: txikienetik handienera') ?></option>
+            <option value="precio_mayor" <?= $orden === 'precio_mayor' ? 'selected' : '' ?>><?= tr('Precio: mayor a menor', 'Prezioa: handienetik txikienera') ?></option>
+            <option value="nombre" <?= $orden === 'nombre' ? 'selected' : '' ?>><?= tr('Nombre: A-Z', 'Izena: A-Z') ?></option>
         </select>
     </label>
     <?php if ($soloFavoritos): ?><input type="hidden" name="favoritos" value="1"><?php endif; ?>
     <div class="filter-actions">
-        <button class="btn" type="submit">Aplicar filtros</button>
+        <button class="btn" type="submit"><?= tr('Aplicar filtros', 'Iragazkiak aplikatu') ?></button>
         <?php if ($bilaketa !== '' || $kategoriaId || $orden !== 'recientes' || $soloFavoritos): ?>
-            <a class="reset-link" href="index.php">Restablecer</a>
+            <a class="reset-link" href="index.php"><?= tr('Restablecer', 'Berrezarri') ?></a>
         <?php endif; ?>
     </div>
 </form>
 
-<nav class="category-links" aria-label="Categorías del catálogo">
+<nav class="category-links" aria-label="<?= tr('Categorías del catálogo', 'Katalogoko kategoriak') ?>">
     <?php $todosUrl = 'index.php?' . http_build_query($parametrosCatalogo); ?>
-    <a class="category-pill <?= !$kategoriaId ? 'active' : '' ?>" href="<?= e($todosUrl) ?>">Todo</a>
+    <a class="category-pill <?= !$kategoriaId ? 'active' : '' ?>" href="<?= e($todosUrl) ?>"><?= tr('Todo', 'Dena') ?></a>
     <?php foreach ($kategoriak as $k): ?>
         <?php $categoryParams = $parametrosCatalogo + ['kategoria' => (int) $k['id']]; ?>
         <a class="category-pill <?= $kategoriaId === (int) $k['id'] ? 'active' : '' ?>"
-           href="index.php?<?= e(http_build_query($categoryParams)) ?>"><?= e($k['izena']) ?></a>
+           href="index.php?<?= e(http_build_query($categoryParams)) ?>"><?= e(categoryLabel($k['izena'])) ?></a>
     <?php endforeach; ?>
     <a class="category-pill favorites-pill <?= $soloFavoritos ? 'active' : '' ?>" href="<?= e($favoritosUrl) ?>">
-        Mis favoritos <span><?= count($favoritos) ?></span>
+        <?= tr('Mis favoritos', 'Nire gogokoak') ?> <span><?= count($favoritos) ?></span>
     </a>
 </nav>
 
 <div class="result-bar">
     <div>
-        <h2><?= $soloFavoritos ? 'Mis favoritos' : 'Servicios disponibles' ?></h2>
-        <p><?= count($produktuak) ?> <?= count($produktuak) === 1 ? 'resultado' : 'resultados' ?></p>
+        <h2><?= $soloFavoritos ? tr('Mis favoritos', 'Nire gogokoak') : tr('Servicios disponibles', 'Zerbitzu erabilgarriak') ?></h2>
+        <p><?= count($produktuak) ?> <?= count($produktuak) === 1 ? tr('resultado', 'emaitza') : tr('resultados', 'emaitza') ?></p>
     </div>
-    <?php if ($soloFavoritos): ?><a class="text-link" href="index.php">Volver al catálogo</a><?php endif; ?>
+    <?php if ($soloFavoritos): ?><a class="text-link" href="index.php"><?= tr('Volver al catálogo', 'Katalogora itzuli') ?></a><?php endif; ?>
 </div>
 
 <?php if (!$produktuak): ?>
     <div class="empty-catalog">
-        <strong><?= $soloFavoritos ? 'Todavía no tienes favoritos aquí.' : 'No se encontraron servicios.' ?></strong>
-        <p class="muted"><?= $soloFavoritos ? 'Guarda productos con el botón de estrella para encontrarlos rápido.' : 'Prueba otra búsqueda o cambia los filtros.' ?></p>
-        <a class="btn secondary small" href="index.php">Ver todo el catálogo</a>
+        <strong><?= $soloFavoritos ? tr('Todavía no tienes favoritos aquí.', 'Oraindik ez duzu gogokorik hemen.') : tr('No se encontraron servicios.', 'Ez da zerbitzurik aurkitu.') ?></strong>
+        <p class="muted"><?= $soloFavoritos ? tr('Guarda productos con el botón de estrella para encontrarlos rápido.', 'Gorde produktuak izar-botoiarekin azkar aurkitzeko.') : tr('Prueba otra búsqueda o cambia los filtros.', 'Saiatu beste bilaketa batekin edo aldatu iragazkiak.') ?></p>
+        <a class="btn secondary small" href="index.php"><?= tr('Ver todo el catálogo', 'Katalogo osoa ikusi') ?></a>
     </div>
 <?php else: ?>
     <?php foreach ($kategoriak as $seccion): ?>
@@ -82,8 +82,8 @@ $favoritosUrl = 'index.php?' . http_build_query($parametrosCatalogo + ['kategori
             <section class="catalog-section" id="categoria-<?= (int) $seccion['id'] ?>">
                 <?php if (!$kategoriaId && !$soloFavoritos): ?>
                     <div class="section-heading">
-                        <p class="eyebrow">Explora WinaDenda</p>
-                        <h2><?= e($seccion['izena']) ?></h2>
+                        <p class="eyebrow"><?= tr('Explora WinaDenda', 'Arakatu WinaDenda') ?></p>
+                        <h2><?= e(categoryLabel($seccion['izena'])) ?></h2>
                     </div>
                 <?php endif; ?>
                 <div class="grid">
@@ -92,9 +92,9 @@ $favoritosUrl = 'index.php?' . http_build_query($parametrosCatalogo + ['kategori
                         <article class="card">
                             <div class="card-media">
                                 <?php if ($p['irudia']): ?>
-                                    <img class="brand-logo" src="<?= e($p['irudia']) ?>" alt="Logo de <?= e($p['izena']) ?>" loading="lazy">
+                                    <img src="<?= e($p['irudia']) ?>" alt="<?= e(localizedProductName($p['izena'])) ?>" loading="lazy">
                                 <?php else: ?>
-                                    <div class="noimg">Imagen no disponible</div>
+                                    <div class="noimg"><?= tr('Imagen no disponible', 'Irudia ez dago erabilgarri') ?></div>
                                 <?php endif; ?>
                                 <form class="favorite-form" method="post" action="index.php?c=home&amp;a=favorito">
                                     <?= csrfField() ?>
@@ -104,8 +104,8 @@ $favoritosUrl = 'index.php?' . http_build_query($parametrosCatalogo + ['kategori
                                     <input type="hidden" name="orden" value="<?= e($orden) ?>">
                                     <input type="hidden" name="favoritos" value="<?= $soloFavoritos ? '1' : '0' ?>">
                                     <button class="favorite-btn <?= $esFavorito ? 'saved' : '' ?>" type="submit"
-                                            aria-label="<?= $esFavorito ? 'Quitar de favoritos' : 'Añadir a favoritos' ?>"
-                                            title="<?= $esFavorito ? 'Quitar de favoritos' : 'Añadir a favoritos' ?>">
+                                            aria-label="<?= $esFavorito ? tr('Quitar de favoritos', 'Gogokoetatik kendu') : tr('Añadir a favoritos', 'Gogokoetara gehitu') ?>"
+                                            title="<?= $esFavorito ? tr('Quitar de favoritos', 'Gogokoetatik kendu') : tr('Añadir a favoritos', 'Gogokoetara gehitu') ?>">
                                         <span aria-hidden="true"><?= $esFavorito ? '&#9733;' : '&#9734;' ?></span>
                                     </button>
                                 </form>
@@ -114,22 +114,27 @@ $favoritosUrl = 'index.php?' . http_build_query($parametrosCatalogo + ['kategori
                                 <div class="card-meta">
                                     <span class="tag"><?= e($p['kategoria']) ?></span>
                                     <?php if ($p['stock'] > 0): ?>
-                                        <span class="availability">Disponible</span>
+                                        <span class="availability"><?= tr('Disponible', 'Erabilgarri') ?></span>
                                     <?php else: ?>
-                                        <span class="unavailable">Agotado</span>
+                                        <span class="unavailable"><?= tr('Agotado', 'Agortuta') ?></span>
                                     <?php endif; ?>
                                 </div>
-                                <h3><a href="index.php?c=produktua&amp;a=xehetasunak&amp;id=<?= (int) $p['id'] ?>"><?= e($p['izena']) ?></a></h3>
-                                <p class="card-description"><?= e($p['deskribapena']) ?></p>
+                                <h3><a href="index.php?c=produktua&amp;a=xehetasunak&amp;id=<?= (int) $p['id'] ?>"><?= e(localizedProductName($p['izena'])) ?></a></h3>
+                                <p class="card-description"><?= e(localizedProductDescription($p['deskribapena'])) ?></p>
                                 <p class="price"><?= prezioa((float) $p['prezioa']) ?></p>
                                 <div class="card-actions">
-                                    <a class="btn secondary small" href="index.php?c=produktua&amp;a=xehetasunak&amp;id=<?= (int) $p['id'] ?>">Ver detalles</a>
+                                    <a class="btn secondary small" href="index.php?c=produktua&amp;a=xehetasunak&amp;id=<?= (int) $p['id'] ?>"><?= tr('Ver detalles', 'Xehetasunak ikusi') ?></a>
                                     <?php if ($p['stock'] > 0): ?>
                                         <form method="post" action="index.php?c=saskia&amp;a=gehitu">
                                             <?= csrfField() ?>
                                             <input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
                                             <input type="hidden" name="kopurua" value="1">
-                                            <button class="btn small" type="submit">Añadir al carrito</button>
+                                            <input type="hidden" name="jatorria" value="katalogoa">
+                                            <input type="hidden" name="kategoria" value="<?= (int) ($kategoriaId ?? 0) ?>">
+                                            <input type="hidden" name="q" value="<?= e($bilaketa) ?>">
+                                            <input type="hidden" name="orden" value="<?= e($orden) ?>">
+                                            <input type="hidden" name="favoritos" value="<?= $soloFavoritos ? '1' : '0' ?>">
+                                            <button class="btn small" type="submit"><?= tr('Añadir al carrito', 'Saskira gehitu') ?></button>
                                         </form>
                                     <?php endif; ?>
                                 </div>

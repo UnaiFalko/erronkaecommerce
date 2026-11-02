@@ -66,6 +66,23 @@ CREATE TABLE IF NOT EXISTS eskaera_lerroak (
     INDEX idx_lerro_prod (produktua_id)
 ) ENGINE=InnoDB;
 
+-- ---------- KONTU DIGITALAK (eskaera bakoitzeko kredentzial bakarrak) ----------
+CREATE TABLE IF NOT EXISTS cuentas_digitales (
+    id                  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    producto_id         INT UNSIGNED NOT NULL,
+    usuario_cifrado     TEXT NOT NULL,
+    contrasena_cifrada  TEXT NOT NULL,
+    estado              ENUM('disponible', 'entregada') NOT NULL DEFAULT 'disponible',
+    linea_pedido_id     INT UNSIGNED NULL,
+    creada              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_cuenta_producto FOREIGN KEY (producto_id)
+        REFERENCES produktuak(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_cuenta_linea FOREIGN KEY (linea_pedido_id)
+        REFERENCES eskaera_lerroak(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    INDEX idx_cuenta_disponible (producto_id, estado, id),
+    INDEX idx_cuenta_linea (linea_pedido_id)
+) ENGINE=InnoDB;
+
 -- =====================================================================
 -- PROBA-DATUAK
 -- Admin: admin@denda.eus  /  pasahitza: admin123
@@ -142,3 +159,8 @@ SET p.izena = REPLACE(REPLACE(p.izena, ' · ', ' - '), 'Pokémon', 'Pokemon'),
         ELSE p.irudia
     END
 WHERE k.izena IN ('Productos', 'Boosting', 'Cuentas');
+
+UPDATE produktuak p
+JOIN kategoriak k ON k.id = p.kategoria_id
+SET p.stock = 0
+WHERE k.izena = 'Cuentas';

@@ -26,7 +26,7 @@ class AuthController extends Controller
             flash('Email edo pasahitza okerra.', 'err');
             $this->redirect('auth', 'login');
         }
-        $this->render('auth/login', ['titulua' => 'Saioa hasi']);
+        $this->render('auth/login', ['titulua' => tr('Iniciar sesión', 'Saioa hasi')]);
     }
 
     public function registerAction(): void
@@ -38,9 +38,15 @@ class AuthController extends Controller
             $pass  = $_POST['pasahitza'] ?? '';
 
             $err = [];
-            if ($izena === '') $err[] = 'Izena beharrezkoa da.';
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $err[] = 'Email baliogabea.';
-            if (strlen($pass) < 6) $err[] = 'Pasahitzak 6 karaktere gutxienez izan behar ditu.';
+            if ($izena === '') {
+                $err[] = 'Izena beharrezkoa da.';
+            }
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $err[] = 'Email baliogabea.';
+            }
+            if (strlen($pass) < 6) {
+                $err[] = 'Pasahitzak 6 karaktere gutxienez izan behar ditu.';
+            }
 
             $model = new Erabiltzailea();
             if (!$err && $model->emailezBilatu($email)) {
@@ -55,11 +61,12 @@ class AuthController extends Controller
             flash('Kontua sortu da. Hasi saioa.');
             $this->redirect('auth', 'login');
         }
-        $this->render('auth/register', ['titulua' => 'Erregistratu']);
+        $this->render('auth/register', ['titulua' => tr('Registrarse', 'Erregistratu')]);
     }
 
     public function logoutAction(): void
     {
+        $language = currentLanguage();
         $_SESSION = [];
         if (ini_get('session.use_cookies')) {
             $p = session_get_cookie_params();
@@ -67,6 +74,7 @@ class AuthController extends Controller
         }
         session_destroy();
         session_start();
+        $_SESSION['lang'] = $language;
         flash('Saioa itxi duzu.');
         $this->redirect('home');
     }

@@ -13,6 +13,7 @@ class Eskaera extends Model
         $this->db->beginTransaction();
         try {
             $produktua = new Produktua();
+            $inventarioDigital = new CuentaDigital();
             $guztira = 0.0;
             $lerroak = [];
 
@@ -21,11 +22,15 @@ class Eskaera extends Model
                 if (!$p || $kop < 1) {
                     throw new RuntimeException('Produktu baliogabea saskian.');
                 }
+                $kontuIds = [];
+                if (($p['kategoria'] ?? '') === 'Cuentas') {
+                    $kontuIds = $inventarioDigital->bloquearDisponibles((int) $pid, (int) $kop);
+                }
                 if (!$produktua->stockMurriztu((int) $pid, (int) $kop)) {
                     throw new RuntimeException('Stock nahikorik ez: ' . $p['izena']);
                 }
                 $guztira += $p['prezioa'] * $kop;
-                $lerroak[] = [$pid, $kop, $p['prezioa']];
+                $lerroak[] = [$pid, $kop, $p['prezioa'], $kontuIds];
             }
 
             $this->execute(
@@ -34,12 +39,14 @@ class Eskaera extends Model
             );
             $eskaeraId = (int) $this->db->lastInsertId();
 
-            foreach ($lerroak as [$pid, $kop, $prezioa]) {
+            foreach ($lerroak as [$pid, $kop, $prezioa, $kontuIds]) {
                 $this->execute(
                     'INSERT INTO eskaera_lerroak (eskaera_id, produktua_id, kopurua, prezioa_unitarioa)
                      VALUES (?, ?, ?, ?)',
                     [$eskaeraId, $pid, $kop, $prezioa]
                 );
+                $lineaPedidoId = (int) $this->db->lastInsertId();
+                $inventarioDigital->asignar($kontuIds, $lineaPedidoId);
             }
 
             $this->db->commit();
@@ -73,11 +80,24 @@ class Eskaera extends Model
 
     public function lerroak(int $eskaeraId): array
     {
-        return $this->fetchAll(
-            'SELECT l.*, p.izena FROM eskaera_lerroak l
-             JOIN produktuak p ON p.id = l.produktua_id WHERE l.eskaera_id = ?',
+        $lerroak = $this->fetchAll(
+            'SELECT l.*, p.izena, k.izena AS kategoria
+             FROM eskaera_lerroak l
+             JOIN produktuak p ON p.id = l.produktua_id
+             LEFT JOIN kategoriak k ON k.id = p.kategoria_id
+             WHERE l.eskaera_id = ?',
             [$eskaeraId]
         );
+
+        $inventarioDigital = new CuentaDigital();
+        foreach ($lerroak as &$lerroa) {
+            $lerroa['cuentas'] = ($lerroa['kategoria'] ?? '') === 'Cuentas'
+                ? $inventarioDigital->paraLinea((int) $lerroa['id'])
+                : [];
+        }
+        unset($lerroa);
+
+        return $lerroak;
     }
 
     public function ezabatu(int $id): bool

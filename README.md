@@ -20,6 +20,14 @@ dagoen katalogo bati aplikatzen dizkio.
 Lehendik instalatutako datu-base bati katalogoko irudiak gehitzeko, inportatu
 `database/migrations/002_add_catalog_images.sql` phpMyAdmin bidez.
 
+## Cuentas digitales
+Para actualizar una instalación existente, ejecuta desde la raíz del proyecto:
+`mysql -u root -p ecommerce < database/migrations/007_digital_accounts.sql`.
+
+Las credenciales se guardan cifradas. Si no defines `APP_ENCRYPTION_KEY`, la
+aplicación crea una clave local en `config/.encryption-key` al iniciar. Conserva
+ese archivo: si se pierde, no se podrán recuperar las cuentas ya guardadas.
+
 **Admin:** `admin@denda.eus` / `admin123` · Bezeroak: orrian bertan erregistratu.
 
 ## Egitura
@@ -57,5 +65,8 @@ logs/app.log             errore-erregistroa
 | 3.3.2 Diseinua inplementatu | `database/schema.sql` (CREATE TABLE) |
 | 3.4.2 Diseinu-aldaketa | `database/migrations/001_...sql` (ALTER TABLE, daturik galdu gabe) |
 
+## Segurtasuna
+`password_hash`/`password_verify`, PDO prepared statements, `htmlspecialchars` (XSS), CSRF tokenak, `session_regenerate_id`, rol-kontrola adminerako.
+`password_hash`/`password_verify`, PDO prepared statements, `htmlspecialchars` (XSS), CSRF tokenak, `session_regenerate_id`, rol-kontrola adminerako.
 ## Segurtasuna
 `password_hash`/`password_verify`, PDO prepared statements, `htmlspecialchars` (XSS), CSRF tokenak, `session_regenerate_id`, rol-kontrola adminerako.

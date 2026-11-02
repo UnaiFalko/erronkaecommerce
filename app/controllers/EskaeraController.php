@@ -11,7 +11,7 @@ class EskaeraController extends Controller
         $admin = (self::user()['rola'] ?? '') === 'admin';
 
         $this->render('eskaerak/index', [
-            'titulua' => $admin ? 'Todos los pedidos' : 'Mis pedidos',
+            'titulua' => $admin ? tr('Todos los pedidos', 'Eskaera guztiak') : tr('Mis pedidos', 'Nire eskaerak'),
             'eskaerak' => $admin ? $model->guztiak() : $model->erabiltzailearenak(self::user()['id']),
             'admin' => $admin,
         ]);
@@ -24,6 +24,26 @@ class EskaeraController extends Controller
         $this->verifyCsrf();
 
         $saskia = $_SESSION['saskia'] ?? [];
+        $produktuak = new Produktua();
+        $kantitateak = $_POST['kopurua'] ?? [];
+        foreach (is_array($kantitateak) ? $kantitateak : [] as $produktuaId => $kopurua) {
+            $produktuaId = (int) $produktuaId;
+            if (!isset($saskia[$produktuaId])) {
+                continue;
+            }
+            $kopurua = (int) $kopurua;
+            if ($kopurua < 1) {
+                unset($saskia[$produktuaId]);
+                continue;
+            }
+            $produktua = $produktuak->bilatu($produktuaId);
+            if (!$produktua || $kopurua > (int) $produktua['stock']) {
+                flash('La cantidad de ' . ($produktua['izena'] ?? 'un producto') . ' supera el stock disponible.', 'err');
+                $this->redirect('saskia');
+            }
+            $saskia[$produktuaId] = $kopurua;
+        }
+        $_SESSION['saskia'] = $saskia;
         if (!$saskia) {
             flash('Saskia hutsik dago.', 'err');
             $this->redirect('saskia');
@@ -68,7 +88,7 @@ class EskaeraController extends Controller
             $this->redirect('eskaera');
         }
         $this->render('eskaerak/xehetasunak', [
-            'titulua' => 'Eskaera #' . $e['id'], 'e' => $e, 'lerroak' => $model->lerroak((int) $e['id']),
+            'titulua' => tr('Pedido #', 'Eskaera #') . $e['id'], 'e' => $e, 'lerroak' => $model->lerroak((int) $e['id']),
         ]);
     }
 }

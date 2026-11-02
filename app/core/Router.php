@@ -37,6 +37,6 @@ class Router
     private static function notFound(): void
     {
         http_response_code(404);
-        echo '<h1>404</h1><p>Orria ez da aurkitu.</p><a href="index.php">Hasierara</a>';
+        echo '<h1>404</h1><p>' . tr('No se encontró la página.', 'Orria ez da aurkitu.') . '</p><a href="index.php">' . tr('Inicio', 'Hasiera') . '</a>';
     }
 }

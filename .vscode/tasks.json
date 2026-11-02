@@ -7,7 +7,7 @@
             "command": "C:\\xampp\\php\\php.exe",
             "args": [
                 "-S",
-                "127.0.0.1:8000",
+                "127.0.0.1:8002",
                 "-t",
                 "public"
             ],
@@ -22,8 +22,8 @@
                 },
                 "background": {
                     "activeOnStart": true,
-                    "beginsPattern": "Development Server \\(http://127\\.0\\.0\\.1:8000\\) started",
-                    "endsPattern": "Development Server \\(http://127\\.0\\.0\\.1:8000\\) started"
+                    "beginsPattern": "Development Server \\(http://127\\.0\\.0\\.1:8002\\) started",
+                    "endsPattern": "Development Server \\(http://127\\.0\\.0\\.1:8002\\) started"
                 }
             }
         }

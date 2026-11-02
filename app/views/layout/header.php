@@ -1,31 +1,47 @@
-<?php $u = Controller::user(); $saskiaKop = array_sum($_SESSION['saskia'] ?? []); ?>
+<?php
+$u = Controller::user();
+$saskiaKop = array_sum($_SESSION['saskia'] ?? []);
+$lang = currentLanguage();
+$langTarget = $lang === 'eu' ? 'es' : 'eu';
+$langParams = $_GET;
+$langParams['lang'] = $langTarget;
+?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="<?= e($lang) ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= e($titulua ?? APP_NAME) ?> · <?= APP_NAME ?></title>
+    <title><?= e(localizedProductName($titulua ?? APP_NAME)) ?> · <?= APP_NAME ?></title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <header class="topbar">
     <div class="wrap nav">
         <a class="brand" href="index.php"><?= APP_NAME ?></a>
-        <nav>
-            <a href="index.php">Catálogo</a>
-            <a href="index.php?c=saskia">Carrito (<?= $saskiaKop ?>)</a>
-            <?php if ($u): ?>
-                <a href="index.php?c=eskaera">Pedidos</a>
-                <?php if ($u['rola'] === 'admin'): ?>
-                    <a href="index.php?c=produktua">Administración</a>
+        <div class="nav-controls">
+            <nav>
+                <a href="index.php"><?= tr('Catálogo', 'Katalogoa') ?></a>
+                <a href="index.php?c=saskia"><?= tr('Carrito', 'Saskia') ?> (<?= $saskiaKop ?>)</a>
+                <?php if ($u): ?>
+                    <a href="index.php?c=eskaera"><?= tr('Pedidos', 'Eskaerak') ?></a>
+                    <?php if ($u['rola'] === 'admin'): ?>
+                        <a href="index.php?c=produktua"><?= tr('Administración', 'Administrazioa') ?></a>
+                    <?php endif; ?>
+                    <span class="user"><?= e($u['izena']) ?></span>
+                    <a href="index.php?c=auth&amp;a=logout"><?= tr('Salir', 'Amaitu saioa') ?></a>
+                <?php else: ?>
+                    <a href="index.php?c=auth&amp;a=login"><?= tr('Iniciar sesión', 'Saioa hasi') ?></a>
+                    <a href="index.php?c=auth&amp;a=register"><?= tr('Registrarse', 'Erregistratu') ?></a>
                 <?php endif; ?>
-                <span class="user"><?= e($u['izena']) ?></span>
-                <a href="index.php?c=auth&amp;a=logout">Salir</a>
-            <?php else: ?>
-                <a href="index.php?c=auth&amp;a=login">Iniciar sesión</a>
-                <a href="index.php?c=auth&amp;a=register">Registrarse</a>
-            <?php endif; ?>
-        </nav>
+            </nav>
+            <div class="language-switch" aria-label="<?= tr('Seleccionar idioma', 'Hizkuntza hautatu') ?>">
+                <a href="index.php?<?= e(http_build_query($langParams)) ?>" lang="<?= e($langTarget) ?>" hreflang="<?= e($langTarget) ?>">
+                    <?= $langTarget === 'eu' ? 'Euskara' : 'Español' ?>
+                </a>
+                <span aria-hidden="true">·</span>
+                <strong aria-current="true"><?= $lang === 'eu' ? 'Euskara' : 'Español' ?></strong>
+            </div>
+        </div>
     </div>
 </header>
 <main class="wrap">

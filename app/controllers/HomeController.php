@@ -21,7 +21,7 @@ class HomeController extends Controller
         }
 
         $this->render('produktuak/katalogoa', [
-            'titulua'     => 'Servicios digitales',
+            'titulua'     => tr('Servicios digitales', 'Zerbitzu digitalak'),
             'produktuak'  => $produktuak,
             'kategoriak'  => (new Kategoria())->dendakoak(),
             'kategoriaId' => $kategoriaId,
@@ -61,12 +61,18 @@ class HomeController extends Controller
         $categoria = (int) ($_POST['kategoria'] ?? 0);
         $busqueda = trim($_POST['q'] ?? '');
         $orden = $_POST['orden'] ?? 'recientes';
-        if ($categoria > 0) $params['kategoria'] = $categoria;
-        if ($busqueda !== '') $params['q'] = $busqueda;
+        if ($categoria > 0) {
+            $params['kategoria'] = $categoria;
+        }
+        if ($busqueda !== '') {
+            $params['q'] = $busqueda;
+        }
         if (in_array($orden, ['recientes', 'precio_menor', 'precio_mayor', 'nombre'], true)) {
             $params['orden'] = $orden;
         }
-        if (($_POST['favoritos'] ?? '') === '1') $params['favoritos'] = 1;
+        if (($_POST['favoritos'] ?? '') === '1') {
+            $params['favoritos'] = 1;
+        }
         $this->redirect('home', 'index', $params);
     }
 }

@@ -28,8 +28,41 @@ class ProduktuaController extends Controller
     {
         $this->requireAdmin();
         $this->render('produktuak/admin', [
-            'titulua'    => 'Produktuak kudeatu',
+            'titulua'    => tr('Gestionar productos', 'Produktuak kudeatu'),
             'produktuak' => $this->model->guztiak(),
+        ]);
+    }
+
+    public function cuentasAction(): void
+    {
+        $this->requireAdmin();
+        $id = (int) ($_GET['id'] ?? 0);
+        $producto = $this->model->bilatu($id);
+        if (!$producto || ($producto['kategoria'] ?? '') !== 'Cuentas') {
+            flash('No se encontró el producto.', 'err');
+            $this->redirect('produktua');
+        }
+
+        $inventario = new CuentaDigital();
+        if ($this->isPost()) {
+            $this->verifyCsrf();
+            try {
+                $inventario->agregar(
+                    $id,
+                    (string) ($_POST['usuario'] ?? ''),
+                    (string) ($_POST['contrasena'] ?? '')
+                );
+                flash('Cuenta añadida al inventario.');
+            } catch (RuntimeException $e) {
+                flash($e->getMessage(), 'err');
+            }
+            $this->redirect('produktua', 'cuentas', ['id' => $id]);
+        }
+
+        $this->render('produktuak/cuentas', [
+            'titulua' => tr('Cuentas disponibles', 'Kontu erabilgarriak'),
+            'producto' => $producto,
+            'disponibles' => $inventario->disponibles($id),
         ]);
     }
 
@@ -41,6 +74,17 @@ class ProduktuaController extends Controller
 
         if ($this->isPost()) {
             $this->verifyCsrf();
+            $esCuenta = false;
+            foreach ($kategoriak as $categoria) {
+                if ((string) $categoria['id'] === (string) ($_POST['kategoria_id'] ?? '')
+                    && $categoria['izena'] === 'Cuentas') {
+                    $esCuenta = true;
+                    break;
+                }
+            }
+            if ($esCuenta) {
+                $_POST['stock'] = 0;
+            }
             $this->model->betetzen($_POST);
             $err = $this->model->balidatu();
             if (!$err) {
@@ -49,14 +93,14 @@ class ProduktuaController extends Controller
                 $this->redirect('produktua');
             }
             $this->render('produktuak/form', [
-                'titulua' => 'Produktu berria', 'p' => $_POST, 'kategoriak' => $kategoriak,
-                'errorak' => $err, 'ekintza' => 'sortu', 'id' => null,
+                'titulua' => tr('Nuevo producto', 'Produktu berria'), 'p' => $_POST, 'kategoriak' => $kategoriak,
+                'errorak' => $err, 'ekintza' => 'sortu', 'id' => null, 'cuentaDigital' => $esCuenta,
             ]);
             return;
         }
         $this->render('produktuak/form', [
-            'titulua' => 'Produktu berria', 'p' => [], 'kategoriak' => $kategoriak,
-            'errorak' => [], 'ekintza' => 'sortu', 'id' => null,
+            'titulua' => tr('Nuevo producto', 'Produktu berria'), 'p' => [], 'kategoriak' => $kategoriak,
+            'errorak' => [], 'ekintza' => 'sortu', 'id' => null, 'cuentaDigital' => false,
         ]);
     }
 
@@ -71,9 +115,24 @@ class ProduktuaController extends Controller
             $this->redirect('produktua');
         }
         $kategoriak = (new Kategoria())->guztiak();
+        $cuentaDigital = ($p['kategoria'] ?? '') === 'Cuentas';
 
         if ($this->isPost()) {
             $this->verifyCsrf();
+            $esCuenta = $cuentaDigital;
+            if ($cuentaDigital) {
+                $_POST['stock'] = (int) $p['stock'];
+                $_POST['kategoria_id'] = $p['kategoria_id'];
+            } else {
+                foreach ($kategoriak as $categoria) {
+                    if ((string) $categoria['id'] === (string) ($_POST['kategoria_id'] ?? '')
+                        && $categoria['izena'] === 'Cuentas') {
+                        $_POST['stock'] = (new CuentaDigital())->disponibles($id);
+                        $esCuenta = true;
+                        break;
+                    }
+                }
+            }
             $this->model->betetzen($_POST);
             $this->model->id = $id;
             $err = $this->model->balidatu();
@@ -84,14 +143,14 @@ class ProduktuaController extends Controller
             }
             $p = $_POST;
             $this->render('produktuak/form', [
-                'titulua' => 'Produktua editatu', 'p' => $p, 'kategoriak' => $kategoriak,
-                'errorak' => $err, 'ekintza' => 'editatu', 'id' => $id,
+                'titulua' => tr('Editar producto', 'Produktua editatu'), 'p' => $p, 'kategoriak' => $kategoriak,
+                'errorak' => $err, 'ekintza' => 'editatu', 'id' => $id, 'cuentaDigital' => $esCuenta,
             ]);
             return;
         }
         $this->render('produktuak/form', [
-            'titulua' => 'Produktua editatu', 'p' => $p, 'kategoriak' => $kategoriak,
-            'errorak' => [], 'ekintza' => 'editatu', 'id' => $id,
+            'titulua' => tr('Editar producto', 'Produktua editatu'), 'p' => $p, 'kategoriak' => $kategoriak,
+            'errorak' => [], 'ekintza' => 'editatu', 'id' => $id, 'cuentaDigital' => $cuentaDigital,
         ]);
     }
 
