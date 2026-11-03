@@ -51,6 +51,8 @@ set_exception_handler(function (Throwable $e): void {
 session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax']);
 session_start();
 
+(new CuentaDigital())->importarCuentasDemoPendientes();
+
 if (in_array($_GET['lang'] ?? '', ['es', 'eu'], true)) {
     $_SESSION['lang'] = $_GET['lang'];
 }
@@ -244,7 +246,7 @@ function localizedMessage(string $message): string
         'Esta cuenta usa un cifrado antiguo incompatible; vuelve a añadir sus credenciales.' => ['Esta cuenta usa un cifrado antiguo incompatible; vuelve a añadir sus credenciales.', 'Kontu honek zifratze zahar bateraezina erabiltzen du; gehitu berriro haren kredentzialak.'],
         'Configura APP_ENCRYPTION_KEY con una clave Base64 de 32 bytes.' => ['Configura APP_ENCRYPTION_KEY con una clave Base64 de 32 bytes.', 'Konfiguratu APP_ENCRYPTION_KEY 32 byteko Base64 gako batekin.'],
         'OpenSSL con AES-256-GCM es necesario para gestionar cuentas digitales.' => ['OpenSSL with AES-256-GCM is required to manage digital accounts.', 'OpenSSL eta AES-256-GCM behar dira kontu digitalak kudeatzeko.'],
-        'La extensión Sodium de PHP es necesaria para gestionar cuentas digitales.' => ['Este aviso es antiguo. Recarga la página: las cuentas digitales ya no requieren Sodium.', 'Abisu hau zaharkituta dago. Kargatu orria berriro: kontu digitalek ez dute Sodium behar.'],
+        'La extensión Sodium de PHP es necesaria para leer cuentas cifradas con la versión anterior.' => ['Para leer cuentas cifradas con la versión anterior hace falta Sodium en PHP.', 'Aurreko bertsioan zifratutako kontuak irakurtzeko, PHPko Sodium behar da.'],
         'No se encontró el pedido.' => ['No se encontró el pedido.', 'Eskaera ez da aurkitu.'],
         'Pedido eliminado.' => ['Pedido eliminado.', 'Eskaera ezabatu da.'],
         'Añadido a favoritos.' => ['Añadido a favoritos.', 'Gogokoetara gehitu da.'],

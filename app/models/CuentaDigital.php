@@ -11,6 +11,62 @@ class CuentaDigital extends Model
         return (int) ($row['total'] ?? 0);
     }
 
+    public function importarCuentasDemoPendientes(): void
+    {
+        $this->db->beginTransaction();
+        try {
+            $marcador = $this->db->prepare(
+                "INSERT IGNORE INTO cuentas_demo_importadas (id)
+                 SELECT 'stock-cuentas-demo-v1'
+                 WHERE EXISTS (SELECT 1 FROM cuentas_demo_pendientes)"
+            );
+            $marcador->execute();
+            if ($marcador->rowCount() === 0) {
+                $this->db->commit();
+                return;
+            }
+
+            $pendientes = $this->db->query(
+                'SELECT producto_id, usuario, contrasena
+                 FROM cuentas_demo_pendientes
+                 ORDER BY producto_id, numero'
+            )->fetchAll();
+            $insertar = $this->db->prepare(
+                "INSERT INTO cuentas_digitales
+                    (producto_id, usuario_cifrado, contrasena_cifrada, estado)
+                 VALUES (?, ?, ?, 'disponible')"
+            );
+
+            foreach ($pendientes as $cuenta) {
+                $insertar->execute([
+                    (int) $cuenta['producto_id'],
+                    $this->cifrar((string) $cuenta['usuario']),
+                    $this->cifrar((string) $cuenta['contrasena']),
+                ]);
+            }
+
+            $this->db->exec(
+                "UPDATE produktuak p
+                 INNER JOIN kategoriak k ON k.id = p.kategoria_id
+                 LEFT JOIN (
+                     SELECT producto_id, COUNT(*) AS total
+                     FROM cuentas_digitales
+                     WHERE estado = 'disponible'
+                     GROUP BY producto_id
+                 ) cuentas ON cuentas.producto_id = p.id
+                 SET p.stock = COALESCE(cuentas.total, 0)
+                 WHERE k.izena = 'Cuentas'"
+            );
+            $this->db->exec('DELETE FROM cuentas_demo_pendientes');
+            $this->db->commit();
+        } catch (Throwable $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            throw $e;
+        }
+    }
+
     public function agregar(int $productoId, string $usuario, string $contrasena): void
     {
         $usuario = trim($usuario);
@@ -93,13 +149,47 @@ class CuentaDigital extends Model
     private function cifrar(string $valor): string
     {
         $clave = $this->clave();
-        $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
-        $cifrado = sodium_crypto_secretbox($valor, $nonce, $clave);
-        return base64_encode($nonce . $cifrado);
+        if (!extension_loaded('openssl')) {
+            throw new RuntimeException('La extensión OpenSSL de PHP es necesaria para cifrar cuentas digitales.');
+        }
+
+        $nonce = random_bytes(12);
+        $tag = '';
+        $cifrado = openssl_encrypt($valor, 'aes-256-gcm', $clave, OPENSSL_RAW_DATA, $nonce, $tag);
+        if ($cifrado === false) {
+            throw new RuntimeException('No se pudo cifrar la cuenta digital.');
+        }
+        return 'v2:' . base64_encode($nonce . $tag . $cifrado);
     }
 
     private function descifrar(string $valor): string
     {
+        if (str_starts_with($valor, 'v2:')) {
+            if (!extension_loaded('openssl')) {
+                throw new RuntimeException('La extensión OpenSSL de PHP es necesaria para leer cuentas digitales.');
+            }
+
+            $datos = base64_decode(substr($valor, 3), true);
+            if ($datos === false || strlen($datos) < 28) {
+                throw new RuntimeException('No se pudo leer una cuenta digital.');
+            }
+
+            $nonce = substr($datos, 0, 12);
+            $tag = substr($datos, 12, 16);
+            $cifrado = substr($datos, 28);
+            foreach ($this->clavesDisponibles() as $clave) {
+                $texto = openssl_decrypt($cifrado, 'aes-256-gcm', $clave, OPENSSL_RAW_DATA, $nonce, $tag);
+                if ($texto !== false) {
+                    return $texto;
+                }
+            }
+            throw new RuntimeException('La clave de cifrado no coincide con la usada al guardar las cuentas.');
+        }
+
+        if (!extension_loaded('sodium')) {
+            throw new RuntimeException('La extensión Sodium de PHP es necesaria para leer cuentas cifradas con la versión anterior.');
+        }
+
         $datos = base64_decode($valor, true);
         if ($datos === false || strlen($datos) <= SODIUM_CRYPTO_SECRETBOX_NONCEBYTES) {
             throw new RuntimeException('No se pudo leer una cuenta digital.');
@@ -125,14 +215,20 @@ class CuentaDigital extends Model
 
     private function clave(): string
     {
-        if (!extension_loaded('sodium')) {
-            throw new RuntimeException('La extensión Sodium de PHP es necesaria para gestionar cuentas digitales.');
-        }
-
         $clave = base64_decode(APP_ENCRYPTION_KEY, true);
-        if ($clave === false || strlen($clave) !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {
+        if ($clave === false || strlen($clave) !== 32) {
             throw new RuntimeException('Configura APP_ENCRYPTION_KEY con una clave Base64 de 32 bytes.');
         }
         return $clave;
+    }
+
+    private function clavesDisponibles(): array
+    {
+        $claves = [$this->clave()];
+        $fallback = base64_decode(APP_ENCRYPTION_KEY_FALLBACK, true);
+        if ($fallback !== false && strlen($fallback) === 32 && !hash_equals($claves[0], $fallback)) {
+            $claves[] = $fallback;
+        }
+        return $claves;
     }
 }
