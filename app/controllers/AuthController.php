@@ -1,9 +1,10 @@
 <?php
 /**
- * Autentifikazioa: erregistroa, login, logout (saio-aldagaiak $_SESSION).
+ * Controla el inicio de sesión, el registro de usuarios y el cierre de sesión.
  */
 class AuthController extends Controller
 {
+    /** Comprueba las credenciales y guarda al usuario en la sesión. */
     public function loginAction(): void
     {
         if ($this->isPost()) {
@@ -13,7 +14,7 @@ class AuthController extends Controller
 
             $u = (new Erabiltzailea())->autentifikatu($email, $pass);
             if ($u) {
-                session_regenerate_id(true);            // session fixation-aren aurka
+                session_regenerate_id(true);            // Evita reutilizar el identificador de sesión.
                 $_SESSION['user'] = [
                     'id'    => (int) $u['id'],
                     'izena' => $u['izena'],
@@ -29,6 +30,7 @@ class AuthController extends Controller
         $this->render('auth/login', ['titulua' => tr('Iniciar sesión', 'Saioa hasi')]);
     }
 
+    /** Valida los datos y crea una cuenta nueva. */
     public function registerAction(): void
     {
         if ($this->isPost()) {
@@ -64,6 +66,7 @@ class AuthController extends Controller
         $this->render('auth/register', ['titulua' => tr('Registrarse', 'Erregistratu')]);
     }
 
+    /** Borra la sesión del usuario y conserva el idioma elegido. */
     public function logoutAction(): void
     {
         $language = currentLanguage();

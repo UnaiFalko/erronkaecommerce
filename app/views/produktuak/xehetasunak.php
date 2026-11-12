@@ -1,3 +1,4 @@
+<!-- Información, disponibilidad y acciones de compra de un producto. -->
 <?php
 $enCarrito = (int) ($_SESSION['saskia'][(int) $p['id']] ?? 0);
 $stockDisponible = max(0, (int) $p['stock'] - $enCarrito);

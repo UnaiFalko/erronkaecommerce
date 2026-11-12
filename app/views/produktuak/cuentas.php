@@ -1,3 +1,4 @@
+<!-- Muestra el stock de cuentas y permite añadir credenciales. -->
 <a href="index.php?c=produktua"><?= tr('Volver a productos', 'Itzuli produktuetara') ?></a>
 <h1><?= e($producto['izena']) ?></h1>
 <p class="muted">

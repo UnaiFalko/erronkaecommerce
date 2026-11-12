@@ -1,3 +1,4 @@
+<!-- Formulario compartido para crear o editar un producto. -->
 <h1><?= e($titulua) ?></h1>
 
 <?php if (!empty($errorak)): ?>

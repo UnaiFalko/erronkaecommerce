@@ -1,3 +1,4 @@
+<!-- Carrito: cantidades, precios, total y confirmación de compra. -->
 <div class="cart-heading">
     <div>
         <p class="eyebrow"><?= tr('Tu compra', 'Zure erosketa') ?></p>

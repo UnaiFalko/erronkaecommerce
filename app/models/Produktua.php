@@ -1,6 +1,6 @@
 <?php
 /**
- * Produktua klasea. CRUD operazioak (3.2.2): sortu, irakurri, eguneratu, ezabatu.
+ * Guarda los datos de los productos y realiza sus operaciones de consulta y edición.
  */
 class Produktua extends Model
 {
@@ -12,6 +12,7 @@ class Produktua extends Model
     public ?int $kategoriaId = null;
     public ?string $irudia = null;
 
+    /** Copia y normaliza los datos recibidos del formulario. */
     public function betetzen(array $d): self
     {
         $this->izena        = trim($d['izena'] ?? '');
@@ -23,7 +24,7 @@ class Produktua extends Model
         return $this;
     }
 
-    /** @return string[] balidazio-erroreak */
+    /** Comprueba los campos y devuelve los mensajes de error. */
     public function balidatu(): array
     {
         $err = [];
@@ -39,7 +40,7 @@ class Produktua extends Model
         return $err;
     }
 
-    // ---- CREATE ----
+    /** Crea un producto y devuelve su identificador. */
     public function sortu(): int
     {
         $this->execute(
@@ -50,17 +51,19 @@ class Produktua extends Model
         return (int) $this->db->lastInsertId();
     }
 
-    // ---- READ ----
+    /** Devuelve productos para la administración. */
     public function guztiak(?int $kategoriaId = null, string $bilaketa = '', string $orden = 'recientes'): array
     {
         return $this->zerrenda($kategoriaId, $bilaketa, false, $orden);
     }
 
+    /** Devuelve los productos visibles en el catálogo. */
     public function katalogoa(?int $kategoriaId = null, string $bilaketa = '', string $orden = 'recientes'): array
     {
         return $this->zerrenda($kategoriaId, $bilaketa, true, $orden);
     }
 
+    /** Aplica filtros y orden a una lista de productos. */
     private function zerrenda(?int $kategoriaId, string $bilaketa, bool $dendakoakBakarrik, string $orden): array
     {
         $sql = 'SELECT p.*, k.izena AS kategoria
@@ -89,6 +92,7 @@ class Produktua extends Model
         return $this->fetchAll($sql, $params);
     }
 
+    /** Busca un producto y su categoría por identificador. */
     public function bilatu(int $id): ?array
     {
         return $this->fetchOne(
@@ -99,7 +103,7 @@ class Produktua extends Model
         );
     }
 
-    // ---- UPDATE ----
+    /** Guarda los cambios del producto actual. */
     public function eguneratu(): bool
     {
         return $this->execute(
@@ -110,6 +114,7 @@ class Produktua extends Model
         ) >= 0;
     }
 
+    /** Reduce el stock solo si quedan unidades suficientes. */
     public function stockMurriztu(int $id, int $kopurua): bool
     {
         return $this->execute(
@@ -118,7 +123,7 @@ class Produktua extends Model
         ) === 1;
     }
 
-    // ---- DELETE ----
+    /** Elimina un producto por identificador. */
     public function ezabatu(int $id): bool
     {
         return $this->execute('DELETE FROM produktuak WHERE id = ?', [$id]) === 1;

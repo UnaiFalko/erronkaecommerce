@@ -1,3 +1,4 @@
+<!-- Formulario de inicio de sesión con protección CSRF. -->
 <h1><?= tr('Iniciar sesión', 'Saioa hasi') ?></h1>
 <form method="post" class="form narrow" action="index.php?c=auth&amp;a=login">
     <?= csrfField() ?>

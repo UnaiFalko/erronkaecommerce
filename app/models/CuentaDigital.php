@@ -1,6 +1,8 @@
 <?php
+/** Guarda, cifra y entrega las credenciales de las cuentas digitales. */
 class CuentaDigital extends Model
 {
+    /** Cuenta cuántas credenciales quedan para un producto. */
     public function disponibles(int $productoId): int
     {
         $row = $this->fetchOne(
@@ -11,6 +13,7 @@ class CuentaDigital extends Model
         return (int) ($row['total'] ?? 0);
     }
 
+    /** Importa una sola vez las cuentas ficticias preparadas en la base de datos. */
     public function importarCuentasDemoPendientes(): void
     {
         $this->db->beginTransaction();
@@ -67,6 +70,7 @@ class CuentaDigital extends Model
         }
     }
 
+    /** Cifra y guarda una cuenta nueva y actualiza el stock. */
     public function agregar(int $productoId, string $usuario, string $contrasena): void
     {
         $usuario = trim($usuario);
@@ -92,6 +96,7 @@ class CuentaDigital extends Model
         }
     }
 
+    /** Bloquea cuentas disponibles para que no se asignen a dos pedidos. */
     public function bloquearDisponibles(int $productoId, int $cantidad): array
     {
         $consulta = $this->db->prepare(
@@ -108,6 +113,7 @@ class CuentaDigital extends Model
         return $ids;
     }
 
+    /** Marca las credenciales seleccionadas como entregadas al pedido. */
     public function asignar(array $ids, int $lineaPedidoId): void
     {
         if (!$ids) {
@@ -127,6 +133,7 @@ class CuentaDigital extends Model
         }
     }
 
+    /** Devuelve descifradas las credenciales de una línea del pedido. */
     public function paraLinea(int $lineaPedidoId): array
     {
         $cuentas = $this->fetchAll(
@@ -146,6 +153,7 @@ class CuentaDigital extends Model
         return $cuentas;
     }
 
+    /** Cifra un texto con AES-256-GCM. */
     private function cifrar(string $valor): string
     {
         $clave = $this->clave();
@@ -162,6 +170,7 @@ class CuentaDigital extends Model
         return 'v2:' . base64_encode($nonce . $tag . $cifrado);
     }
 
+    /** Descifra el formato actual y, si hace falta, el formato antiguo. */
     private function descifrar(string $valor): string
     {
         if (str_starts_with($valor, 'v2:')) {
@@ -213,6 +222,7 @@ class CuentaDigital extends Model
         throw new RuntimeException('La clave de cifrado no coincide con la usada al guardar las cuentas.');
     }
 
+    /** Lee y valida la clave principal de cifrado. */
     private function clave(): string
     {
         $clave = base64_decode(APP_ENCRYPTION_KEY, true);
@@ -222,6 +232,7 @@ class CuentaDigital extends Model
         return $clave;
     }
 
+    /** Devuelve la clave actual y la anterior si está configurada. */
     private function clavesDisponibles(): array
     {
         $claves = [$this->clave()];

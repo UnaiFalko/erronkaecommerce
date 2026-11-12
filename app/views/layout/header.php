@@ -1,3 +1,4 @@
+<?php // Cabecera común: usuario, navegación, idioma y avisos. ?>
 <?php
 $u = Controller::user();
 $saskiaKop = array_sum($_SESSION['saskia'] ?? []);
@@ -26,6 +27,7 @@ $langParams['lang'] = $langTarget;
                     <a href="index.php?c=eskaera"><?= tr('Pedidos', 'Eskaerak') ?></a>
                     <?php if ($u['rola'] === 'admin'): ?>
                         <a href="index.php?c=produktua"><?= tr('Administración', 'Administrazioa') ?></a>
+                        <a href="index.php?c=erabiltzailea"><?= tr('Usuarios', 'Erabiltzaileak') ?></a>
                     <?php endif; ?>
                     <span class="user"><?= e($u['izena']) ?></span>
                     <a href="index.php?c=auth&amp;a=logout"><?= tr('Salir', 'Amaitu saioa') ?></a>

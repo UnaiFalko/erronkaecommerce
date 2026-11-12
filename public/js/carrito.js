@@ -1,4 +1,5 @@
 (() => {
+    // Actualiza los importes en pantalla y envía el formulario al cambiar una cantidad.
     const cart = document.querySelector('[data-cart]');
     if (!cart) return;
 

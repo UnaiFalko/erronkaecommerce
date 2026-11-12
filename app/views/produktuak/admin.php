@@ -1,3 +1,4 @@
+<!-- Lista de productos y acciones disponibles para el administrador. -->
 <div class="row-between">
     <h1><?= tr('Gestionar productos', 'Produktuak kudeatu') ?></h1>
     <a class="btn" href="index.php?c=produktua&amp;a=sortu">+ <?= tr('Nuevo producto', 'Produktu berria') ?></a>

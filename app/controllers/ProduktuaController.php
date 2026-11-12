@@ -1,6 +1,6 @@
 <?php
 /**
- * Produktuen CRUD (admin) + produktuaren xehetasunak (publikoa).
+ * Muestra los productos y permite a los administradores gestionarlos.
  */
 class ProduktuaController extends Controller
 {
@@ -11,7 +11,7 @@ class ProduktuaController extends Controller
         $this->model = new Produktua();
     }
 
-    // READ (publikoa)
+    /** Muestra los datos de un producto. */
     public function xehetasunakAction(): void
     {
         $p = $this->model->bilatu((int) ($_GET['id'] ?? 0));
@@ -23,7 +23,7 @@ class ProduktuaController extends Controller
         $this->render('produktuak/xehetasunak', ['titulua' => $p['izena'], 'p' => $p]);
     }
 
-    // READ (admin zerrenda)
+    /** Muestra todos los productos para su gestión. */
     public function indexAction(): void
     {
         $this->requireAdmin();
@@ -33,6 +33,7 @@ class ProduktuaController extends Controller
         ]);
     }
 
+    /** Consulta y añade cuentas digitales al inventario. */
     public function cuentasAction(): void
     {
         $this->requireAdmin();
@@ -66,7 +67,7 @@ class ProduktuaController extends Controller
         ]);
     }
 
-    // CREATE
+    /** Valida y guarda un producto nuevo. */
     public function sortuAction(): void
     {
         $this->requireAdmin();
@@ -104,7 +105,7 @@ class ProduktuaController extends Controller
         ]);
     }
 
-    // UPDATE
+    /** Carga un producto y guarda los cambios enviados. */
     public function editatuAction(): void
     {
         $this->requireAdmin();
@@ -154,7 +155,7 @@ class ProduktuaController extends Controller
         ]);
     }
 
-    // DELETE
+    /** Elimina un producto si ningún pedido depende de él. */
     public function ezabatuAction(): void
     {
         $this->requireAdmin();
@@ -166,8 +167,7 @@ class ProduktuaController extends Controller
             $this->model->ezabatu((int) ($_POST['id'] ?? 0));
             flash('Produktua ezabatu da.');
         } catch (PDOException $e) {
-            // Eskaeretan erabilita badago, FK-k ez du uzten
-            logError('Ezabatzeko errorea: ' . $e->getMessage());
+            // La clave externa impide borrar productos incluidos en pedidos.
             flash('Ezin da ezabatu: eskaeretan erabilita dago.', 'err');
         }
         $this->redirect('produktua');

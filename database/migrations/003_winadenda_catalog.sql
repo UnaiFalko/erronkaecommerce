@@ -1,3 +1,4 @@
+-- Actualiza el catálogo, sus categorías y los datos de demostración de la tienda.
 USE ecommerce;
 
 START TRANSACTION;

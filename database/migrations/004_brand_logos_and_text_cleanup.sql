@@ -1,3 +1,4 @@
+-- Corrige nombres y descripciones y asigna a cada producto su logotipo.
 USE ecommerce;
 SET NAMES utf8mb4;
 

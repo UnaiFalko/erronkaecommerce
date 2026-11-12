@@ -1,11 +1,10 @@
 <?php
 /**
- * Kontrolatzaile nagusia: bistak errendatu, birbideratu, saioa eta CSRF kontrolak.
- * (2.2.1) Frontend-a backend-etik bereizten da: kontrolatzaileak datuak prestatzen ditu,
- * bistek (HTML/CSS) datuak bakarrik erakusten dituzte.
+ * Funciones comunes para mostrar páginas, redirigir y comprobar permisos y formularios.
  */
 abstract class Controller
 {
+    /** Carga la cabecera, la vista solicitada y el pie de página. */
     protected function render(string $view, array $data = []): void
     {
         extract($data, EXTR_SKIP);
@@ -18,6 +17,7 @@ abstract class Controller
         require BASE_PATH . '/app/views/layout/footer.php';
     }
 
+    /** Envía al navegador a otra acción y termina la petición. */
     protected function redirect(string $c, string $a = 'index', array $params = []): void
     {
         $qs = http_build_query(array_merge(['c' => $c, 'a' => $a], $params));
@@ -25,20 +25,37 @@ abstract class Controller
         exit;
     }
 
-    // ---- Saioa / autentifikazioa (2.2.1) ----
+    /** Devuelve los datos del usuario que inició sesión. */
     public static function user(): ?array
     {
         return $_SESSION['user'] ?? null;
     }
 
+    /** Pide iniciar sesión antes de continuar. */
     protected function requireLogin(): void
     {
-        if (!self::user()) {
+        $user = self::user();
+        if (!$user) {
             flash('Saioa hasi behar duzu orri hau ikusteko.', 'err');
             $this->redirect('auth', 'login');
         }
+
+        $currentUser = (new Erabiltzailea())->bilatu((int) $user['id']);
+        if (!$currentUser) {
+            unset($_SESSION['user']);
+            flash(tr('Tu cuenta ya no está disponible. Inicia sesión de nuevo.', 'Zure kontua ez dago erabilgarri. Hasi saioa berriro.'), 'err');
+            $this->redirect('auth', 'login');
+        }
+
+        $_SESSION['user'] = [
+            'id' => (int) $currentUser['id'],
+            'izena' => $currentUser['izena'],
+            'email' => $currentUser['email'],
+            'rola' => $currentUser['rola'],
+        ];
     }
 
+    /** Comprueba que el usuario haya iniciado sesión como administrador. */
     protected function requireAdmin(): void
     {
         $this->requireLogin();
@@ -49,6 +66,7 @@ abstract class Controller
         }
     }
 
+    /** Rechaza formularios que no tengan el token de seguridad correcto. */
     protected function verifyCsrf(): void
     {
         $token = $_POST['csrf'] ?? '';
@@ -58,6 +76,7 @@ abstract class Controller
         }
     }
 
+    /** Indica si la petición actual se envió mediante POST. */
     protected function isPost(): bool
     {
         return $_SERVER['REQUEST_METHOD'] === 'POST';

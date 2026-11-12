@@ -1,3 +1,4 @@
+-- Cambia las rutas de imágenes de los productos a los logotipos del sitio.
 USE ecommerce;
 
 UPDATE produktuak AS p

@@ -1,3 +1,4 @@
+-- Añade imágenes a productos antiguos que todavía no tienen ninguna.
 USE ecommerce;
 
 UPDATE produktuak

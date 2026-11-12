@@ -1,3 +1,4 @@
+<!-- Tabla de pedidos del usuario o del administrador. -->
 <h1><?= e($titulua) ?></h1>
 <?php if (!$eskaerak) { ?>
     <p class="muted"><?= tr('No hay pedidos.', 'Ez dago eskaerarik.') ?></p>

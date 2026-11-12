@@ -1,3 +1,4 @@
+<!-- Formulario para crear una cuenta de usuario. -->
 <h1><?= tr('Registrarse', 'Erregistratu') ?></h1>
 <form method="post" class="form narrow" action="index.php?c=auth&amp;a=register">
     <?= csrfField() ?>
