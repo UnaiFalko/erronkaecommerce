@@ -1,16 +1,17 @@
 <?php
 /**
- * Erosketa-saskia $_SESSION['saskia'] barruan: [produktuId => kopurua]
+ * Gestiona el carrito guardado en la sesión como producto => cantidad.
  */
 class SaskiaController extends Controller
 {
+    /** Calcula los subtotales y muestra los productos del carrito. */
     public function indexAction(): void
     {
         $saskia = $_SESSION['saskia'] ?? [];
         $lerroak = [];
         $guztira = 0.0;
         $stockNahikorikEz = false;
-        $model = $saskia ? new Produktua() : null;   // saski hutsak ez du DB konexiorik behar
+        $model = $saskia ? new Produktua() : null;   // No abre conexión si el carrito está vacío.
 
         foreach ($saskia as $pid => $kop) {
             $p = $model->bilatu((int) $pid);
@@ -31,6 +32,7 @@ class SaskiaController extends Controller
         ]);
     }
 
+    /** Comprueba el stock y añade un producto al carrito. */
     public function gehituAction(): void
     {
         if (!$this->isPost()) $this->redirect('home');
@@ -83,6 +85,7 @@ class SaskiaController extends Controller
         $this->redirect('home', 'index', $params);
     }
 
+    /** Comprueba las cantidades nuevas y actualiza el carrito. */
     public function eguneratuAction(): void
     {
         if (!$this->isPost()) $this->redirect('saskia');
@@ -110,6 +113,7 @@ class SaskiaController extends Controller
         $this->redirect('saskia');
     }
 
+    /** Quita un producto del carrito. */
     public function kenduAction(): void
     {
         if (!$this->isPost()) $this->redirect('saskia');
@@ -118,6 +122,7 @@ class SaskiaController extends Controller
         $this->redirect('saskia');
     }
 
+    /** Vacía el carrito. */
     public function vaciarAction(): void
     {
         if (!$this->isPost()) $this->redirect('saskia');

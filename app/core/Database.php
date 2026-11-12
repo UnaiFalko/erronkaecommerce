@@ -1,13 +1,13 @@
 <?php
 /**
- * PDO konexioa (Singleton). Segurtasun-parametroak:
- *  - ERRMODE_EXCEPTION: erroreak salbuespen gisa
- *  - EMULATE_PREPARES=false: benetako prepared statements (SQL injection-aren aurka)
+ * Crea y comparte la conexión PDO con la base de datos.
+ * Las consultas usan parámetros y errores como excepciones.
  */
 class Database
 {
     private static ?PDO $instance = null;
 
+    /** Abre la conexión solo la primera vez y la reutiliza después. */
     public static function getConnection(): PDO
     {
         if (self::$instance === null) {

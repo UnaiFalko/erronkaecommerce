@@ -1,3 +1,4 @@
+-- Crea el inventario de cuentas digitales y sincroniza el stock disponible.
 USE ecommerce;
 SET NAMES utf8mb4;
 START TRANSACTION;

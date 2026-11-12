@@ -1,3 +1,4 @@
+<!-- Detalle del pedido, sus importes y las cuentas digitales entregadas. -->
 <a href="index.php?c=eskaera">&larr; <?= tr('Pedidos', 'Eskaerak') ?></a>
 <h1><?= tr('Pedido', 'Eskaera') ?> #<?= (int) $e['id'] ?></h1>
 <p class="muted"><?= e($e['data']) ?> · <?= tr('Estado', 'Egoera') ?>: <strong><?= e(orderStatusLabel($e['egoera'])) ?></strong></p>

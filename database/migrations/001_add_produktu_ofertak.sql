@@ -1,8 +1,5 @@
--- =====================================================================
--- 3.4.2: Diseinu-aldaketa datuak galdu gabe (migrazioa)
--- Behar berria: produktuei deskontua eta "nabarmendua" markatzeko aukera.
--- ALTER TABLE erabiltzen da; lehendik dauden errenkadak ez dira ukitzen.
--- =====================================================================
+-- Añade descuento y destacado sin borrar los productos existentes.
+-- Para deshacer el cambio, elimina las dos columnas indicadas al final.
 USE ecommerce;
 
 ALTER TABLE produktuak
@@ -10,5 +7,5 @@ ALTER TABLE produktuak
     ADD COLUMN nabarmendua BOOLEAN NOT NULL DEFAULT FALSE AFTER deskontua;
 
 -- Datu zaharrek balio lehenetsiak hartzen dituzte (0 eta FALSE).
--- Itzultzeko (rollback):
+-- Para deshacer el cambio:
 --   ALTER TABLE produktuak DROP COLUMN nabarmendua, DROP COLUMN deskontua;

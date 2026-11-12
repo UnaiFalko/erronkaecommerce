@@ -1,3 +1,4 @@
+/* Colores y medidas que se reutilizan en toda la página. */
 :root{
     --bg:#101112;
     --fg:#f4f4f2;
@@ -14,6 +15,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:linear-gradient(180deg,#191a1c 0,#101112 360px);color:var(--fg);line-height:1.6}
+/* Ancho general, enlaces y barra de navegación. */
 .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
 main.wrap{padding-top:42px;padding-bottom:72px;min-height:76vh}
 a{color:var(--deep);text-underline-offset:3px}
@@ -33,6 +35,7 @@ nav .user{color:#b6b8b9;padding-right:4px}
 .language-switch a,.language-switch strong{padding:3px 5px;color:#d6d7d8;text-decoration:none}
 .language-switch a:hover{color:#fff;background:#292a2c}
 .language-switch strong{color:#fff}
+/* Tipografía, mensajes y botones. */
 h1,h2,h3{color:var(--deep);line-height:1.2}
 h1{font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-size:clamp(2.2rem,5vw,3.6rem);font-weight:950;text-transform:uppercase;letter-spacing:-.055em;margin:.1em 0 .55em}
 h2{font-family:Georgia,"Times New Roman",serif;letter-spacing:-.025em}
@@ -49,6 +52,7 @@ h2{font-family:Georgia,"Times New Roman",serif;letter-spacing:-.025em}
 .btn.secondary{background:#27292b;color:#fff;border:1px solid #454749;box-shadow:none}
 .btn.secondary:hover{background:#343638}
 .btn.big-btn{padding:15px 26px;font-size:1rem;margin-top:16px}
+/* Campos y filtros del catálogo. */
 .filters{display:flex;gap:10px;margin:0 0 28px;padding:14px;background:#202123;border:1px solid var(--bd);border-radius:8px;box-shadow:0 5px 18px rgba(0,0,0,.2);flex-wrap:wrap}
 input,select,textarea{font:inherit;padding:11px 13px;border:1px solid #414345;border-radius:6px;background:#151617;color:var(--fg);width:100%;transition:border-color .18s,box-shadow .18s}
 input::placeholder,textarea::placeholder{color:#8b8d8e}
@@ -59,6 +63,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pri);box
 .catalog-hero h1{max-width:850px;margin:.1em 0 .25em}
 .catalog-hero>p:last-child{color:var(--mut);font-size:1.08rem;margin:0}
 .eyebrow{margin:0 0 8px;color:#ff777b;font-size:.75rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase}
+/* Tarjetas del catálogo y ficha de producto. */
 .catalog-section{margin:38px 0 52px;scroll-margin-top:100px}
 .section-heading{margin-bottom:18px;border-bottom:1px solid var(--bd);padding-bottom:12px}
 .section-heading h2{margin:0;font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-size:clamp(1.7rem,3vw,2.2rem);font-weight:900;text-transform:uppercase;letter-spacing:-.04em}
@@ -83,6 +88,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pri);box
 .detail{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:clamp(28px,6vw,76px);margin-top:24px;background:linear-gradient(145deg,#232426,#191a1b);border:1px solid var(--bd);border-radius:10px;padding:clamp(18px,4vw,42px);box-shadow:var(--shadow)}
 .detail img{width:100%;max-height:460px;aspect-ratio:1/1;object-fit:cover;border-radius:7px}
 .detail h1{margin:.35em 0;font-size:clamp(2.2rem,4vw,3.4rem)}
+/* Tablas, formularios y elementos comunes. */
 .table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-bottom:20px;box-shadow:0 5px 18px rgba(0,0,0,.2)}
 .table th,.table td{padding:13px 15px;border-bottom:1px solid var(--bd);text-align:left}
 .table th{background:#302123;color:#ff9a9c;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
@@ -95,6 +101,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pri);box
 .form.narrow{max-width:440px}
 .form label{display:flex;flex-direction:column;gap:7px;font-size:.9rem;font-weight:700;color:#e6e6e4}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+/* Pie de página. */
 .foot{border-top:1px solid #333537;padding:24px 0;color:#aeb0b1;font-size:.87rem;background:#08090a}
 .foot .wrap{display:flex;align-items:center;min-height:35px}
 :focus-visible{outline:3px solid #ed1c24;outline-offset:3px}

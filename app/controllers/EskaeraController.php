@@ -1,9 +1,10 @@
 <?php
 /**
- * Eskaerak: erosketa burutu, nire eskaerak, admin: eskaera guztiak.
+ * Permite hacer compras y consultar o borrar pedidos.
  */
 class EskaeraController extends Controller
 {
+    /** Muestra los pedidos del usuario o todos si es administrador. */
     public function indexAction(): void
     {
         $this->requireLogin();
@@ -17,6 +18,7 @@ class EskaeraController extends Controller
         ]);
     }
 
+    /** Valida el carrito y crea el pedido. */
     public function burutuAction(): void
     {
         $this->requireLogin();
@@ -59,6 +61,7 @@ class EskaeraController extends Controller
         }
     }
 
+    /** Borra un pedido; solo puede hacerlo un administrador. */
     public function ezabatuAction(): void
     {
         $this->requireAdmin();
@@ -75,6 +78,7 @@ class EskaeraController extends Controller
         $this->redirect('eskaera');
     }
 
+    /** Muestra el pedido si pertenece al usuario o si es administrador. */
     public function xehetasunakAction(): void
     {
         $this->requireLogin();

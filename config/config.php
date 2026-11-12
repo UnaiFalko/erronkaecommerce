@@ -1,7 +1,7 @@
 <?php
 /**
- * Konfigurazioa: datu-basearen konexioa eta aplikazioaren parametroak.
- * (2.4.1) PHP + MySQL/MariaDB konexioaren konfigurazioa.
+ * Configuración de la base de datos y de la aplicación.
+ * La clave de cifrado se guarda localmente si no se configura otra.
  */
 
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
@@ -42,6 +42,5 @@ define(
 );
 
 define('APP_NAME', 'WinaDenda');
-define('APP_DEBUG', false);               // true = erroreak pantailan (garapenean bakarrik)
-define('LOG_FILE', __DIR__ . '/../logs/app.log');
+define('APP_DEBUG', false);               // Actívalo solo durante el desarrollo.
 define('BASE_PATH', dirname(__DIR__));

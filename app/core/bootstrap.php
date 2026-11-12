@@ -1,12 +1,12 @@
 <?php
 /**
- * Hasieraketa: autoload, saioa, errore-kudeaketa eta log-ak.
- * (1.4.1) Akatsak identifikatu eta konpontzeko: erroreak erregistratzen dira
- * logs/app.log fitxategian, eta erabiltzaileak mezu garbi bat ikusten du.
+ * Prepara la aplicación, carga las clases e inicia una sesión segura.
+ * También define el idioma y las funciones auxiliares de las vistas.
  */
 require_once __DIR__ . '/../../config/config.php';
 
 spl_autoload_register(function (string $class): void {
+    // Busca las clases en las carpetas principales de la aplicación.
     foreach (['core', 'models', 'controllers'] as $dir) {
         $file = BASE_PATH . "/app/$dir/$class.php";
         if (is_file($file)) {
@@ -16,29 +16,11 @@ spl_autoload_register(function (string $class): void {
     }
 });
 
-function logError(string $message): void
-{
-    $dir = dirname(LOG_FILE);
-    if (!is_dir($dir)) {
-        @mkdir($dir, 0775, true);
-    }
-    @file_put_contents(
-        LOG_FILE,
-        '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL,
-        FILE_APPEND
-    );
-}
-
 error_reporting(E_ALL);
 ini_set('display_errors', APP_DEBUG ? '1' : '0');
 
-set_error_handler(function (int $no, string $str, string $file, int $line): bool {
-    logError("PHP[$no] $str @ $file:$line");
-    return true;
-});
-
+// Los errores graves muestran un mensaje general, sin detalles internos.
 set_exception_handler(function (Throwable $e): void {
-    logError(get_class($e) . ': ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
     http_response_code(500);
     if (APP_DEBUG) {
         echo '<pre>' . htmlspecialchars((string) $e) . '</pre>';
@@ -47,7 +29,7 @@ set_exception_handler(function (Throwable $e): void {
     }
 });
 
-// Saio seguruagoa
+// Activa la sesión y protege su cookie en el navegador.
 session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax']);
 session_start();
 
@@ -57,16 +39,19 @@ if (in_array($_GET['lang'] ?? '', ['es', 'eu'], true)) {
     $_SESSION['lang'] = $_GET['lang'];
 }
 
+/** Devuelve el idioma guardado en la sesión. */
 function currentLanguage(): string
 {
     return $_SESSION['lang'] ?? 'es';
 }
 
+/** Elige el texto en español o euskera según el idioma actual. */
 function tr(string $spanish, string $basque): string
 {
     return currentLanguage() === 'eu' ? $basque : $spanish;
 }
 
+/** Devuelve el nombre de una categoría en el idioma seleccionado. */
 function categoryLabel(?string $category): string
 {
     $labels = [
@@ -80,6 +65,7 @@ function categoryLabel(?string $category): string
     return tr($labels[$category][0], $labels[$category][1]);
 }
 
+/** Traduce los estados internos de los pedidos. */
 function orderStatusLabel(string $status): string
 {
     $labels = [
@@ -92,6 +78,7 @@ function orderStatusLabel(string $status): string
     return isset($labels[$status]) ? tr($labels[$status][0], $labels[$status][1]) : $status;
 }
 
+/** Traduce nombres de productos conocidos al euskera. */
 function localizedProductName(string $name): string
 {
     if (currentLanguage() !== 'eu') {
@@ -123,6 +110,7 @@ function localizedProductName(string $name): string
     ]);
 }
 
+/** Traduce al euskera las descripciones del catálogo que tienen formato conocido. */
 function localizedProductDescription(string $description): string
 {
     if (currentLanguage() !== 'eu') {
@@ -178,17 +166,20 @@ function localizedProductDescription(string $description): string
     return $description;
 }
 
-// ---- Laguntza-funtzioak (bistetan erabiltzeko) ----
+// Funciones pequeñas que usan las vistas para mostrar datos de forma segura.
+/** Escapa un texto para poder mostrarlo dentro de HTML. */
 function e(?string $v): string
 {
     return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
 }
 
+/** Muestra un precio con dos decimales y el símbolo del euro. */
 function prezioa(float $v): string
 {
     return number_format($v, 2, ',', '.') . ' €';
 }
 
+/** Crea un token CSRF una vez por sesión y lo reutiliza. */
 function csrfToken(): string
 {
     if (empty($_SESSION['csrf'])) {
@@ -197,11 +188,13 @@ function csrfToken(): string
     return $_SESSION['csrf'];
 }
 
+/** Genera el campo oculto que se añade a los formularios protegidos. */
 function csrfField(): string
 {
     return '<input type="hidden" name="csrf" value="' . csrfToken() . '">';
 }
 
+/** Guarda un aviso para la siguiente página o devuelve el aviso pendiente. */
 function flash(?string $msg = null, string $type = 'ok')
 {
     if ($msg !== null) {
@@ -216,6 +209,7 @@ function flash(?string $msg = null, string $type = 'ok')
     return $f;
 }
 
+/** Traduce los avisos de la aplicación al idioma elegido. */
 function localizedMessage(string $message): string
 {
     $messages = [

@@ -44,11 +44,10 @@ servicios reales.
 config/config.php        DB konfigurazioa
 app/core/                bootstrap (autoload, saioa, erroreak), Router, Controller, Database (PDO)
 app/models/              Model, Kategoria, Produktua, Erabiltzailea, Eskaera   (OOP)
-app/controllers/         Home, Auth, Produktua (CRUD), Saskia, Eskaera
+app/controllers/         Home, Auth, Produktua (CRUD), Erabiltzailea (CRUD bakarrik adminarentzat), Saskia, Eskaera
 app/views/               HTML bistak (logikarik gabe) + layout
 public/                  index.php (front controller) + css/
 database/                schema.sql, migrations/, ER-eredua.md
-logs/app.log             errore-erregistroa
 
 
 ## Errubrikaren estaldura
@@ -58,7 +57,7 @@ logs/app.log             errore-erregistroa
 | 2.2.3 MVC arkitektura | app/models, app/views, app/controllers, Router |
 | 2.4.1 PHP + MySQL konexioa | config/config.php, app/core/Database.php (PDO, prepared statements, utf8mb4) |
 | 1.3.1 OOP | Model oinarri-klasea, Kategoria, Produktua, Eskaera... herentzia, enkapsulazioa, instantziak |
-| 1.4.1 Akatsen kudeaketa | bootstrap.php: error/exception handler + logs/app.log; try/catch + transakzioak |
+| 1.4.1 Akatsen kudeaketa | bootstrap.php: errore orokor seguruak; try/catch + transakzioak |
 | 2.2.1 Frontend-Backend | $_SESSION bidezko login/logout, rolak, CSRF token, bistek kontrolatzaileak emandako datuak bakarrik erakusten dituzte |
 | 3.1.2 DB erlazionala | MySQL InnoDB, justifikazioa database/ER-eredua.md-n (FK, transakzioak) |
 | 3.2.2 CRUD | ProduktuaController + Produktua (INSERT/SELECT/UPDATE/DELETE) |

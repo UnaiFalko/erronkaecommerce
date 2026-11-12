@@ -4,6 +4,7 @@
     <p><?= tr('Encuentra servicios digitales para tus juegos y plataformas favoritas.', 'Aurkitu zure joko eta plataforma gogokoenetarako zerbitzu digitalak.') ?></p>
 </section>
 
+<!-- Catálogo público con filtros, categorías y productos disponibles. -->
 <?php
 $parametrosCatalogo = ['q' => $bilaketa, 'orden' => $orden];
 if ($soloFavoritos) $parametrosCatalogo['favoritos'] = 1;

@@ -1,12 +1,12 @@
 <?php
 /**
- * Eskaera klasea: eskaera bat sortu (transakzioarekin) eta kontsultatu.
- * Transakzioari esker, stock-a eta eskaera koherenteak dira.
+ * Crea y consulta pedidos; las compras se guardan en una transacción.
  */
 class Eskaera extends Model
 {
     /**
-     * @param array $saskia [produktuId => kopurua]
+     * Recibe el carrito como producto => cantidad.
+     * La transacción mantiene juntos el pedido, el stock y sus cuentas.
      */
     public function sortu(int $erabiltzaileId, array $saskia): int
     {
@@ -57,6 +57,7 @@ class Eskaera extends Model
         }
     }
 
+    /** Devuelve los pedidos de un usuario. */
     public function erabiltzailearenak(int $erabiltzaileId): array
     {
         return $this->fetchAll(
@@ -65,6 +66,7 @@ class Eskaera extends Model
         );
     }
 
+    /** Devuelve todos los pedidos con el nombre de cada cliente. */
     public function guztiak(): array
     {
         return $this->fetchAll(
@@ -73,11 +75,13 @@ class Eskaera extends Model
         );
     }
 
+    /** Busca un pedido por su identificador. */
     public function bilatu(int $id): ?array
     {
         return $this->fetchOne('SELECT * FROM eskaerak WHERE id = ?', [$id]);
     }
 
+    /** Devuelve las líneas del pedido y sus cuentas entregadas. */
     public function lerroak(int $eskaeraId): array
     {
         $lerroak = $this->fetchAll(
@@ -100,6 +104,7 @@ class Eskaera extends Model
         return $lerroak;
     }
 
+    /** Elimina un pedido y sus líneas en una sola transacción. */
     public function ezabatu(int $id): bool
     {
         $this->db->beginTransaction();

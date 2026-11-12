@@ -1,3 +1,4 @@
+-- Prepara cuentas ficticias pendientes para cargarlas de forma segura al iniciar.
 USE ecommerce;
 SET NAMES utf8mb4;
 

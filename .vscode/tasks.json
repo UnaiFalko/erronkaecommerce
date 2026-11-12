@@ -1,6 +1,7 @@
 {
     "version": "2.0.0",
     "tasks": [
+        // Arranca el servidor PHP local para abrir la tienda en el navegador.
         {
             "label": "WinaDenda: servidor PHP",
             "type": "process",

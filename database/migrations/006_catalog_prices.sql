@@ -1,3 +1,4 @@
+-- Actualiza los precios del catálogo y confirma los cambios en una transacción.
 USE ecommerce;
 SET NAMES utf8mb4;
 START TRANSACTION;

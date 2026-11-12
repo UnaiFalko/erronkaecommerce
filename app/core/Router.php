@@ -1,7 +1,6 @@
 <?php
 /**
- * Bideratzailea: ?c=kontrolatzailea&a=ekintza  ->  KontrolatzaileaController::ekintzaAction()
- * (2.2.3) MVC arkitekturaren "front controller" patroia.
+ * Elige qué controlador y acción ejecutar según los parámetros de la URL.
  */
 class Router
 {
@@ -11,8 +10,10 @@ class Router
         'produktua' => 'ProduktuaController',
         'saskia'    => 'SaskiaController',
         'eskaera'   => 'EskaeraController',
+        'erabiltzailea' => 'ErabiltzaileaController',
     ];
 
+    /** Comprueba la URL y ejecuta la acción correspondiente. */
     public static function dispatch(): void
     {
         $c = $_GET['c'] ?? 'home';
@@ -34,6 +35,7 @@ class Router
         $ctrl->$method();
     }
 
+    /** Muestra una página sencilla cuando la ruta no existe. */
     private static function notFound(): void
     {
         http_response_code(404);

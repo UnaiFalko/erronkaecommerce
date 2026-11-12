@@ -1,3 +1,4 @@
+# Envía las rutas que no son archivos o carpetas al punto de entrada PHP.
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

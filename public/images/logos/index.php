@@ -1,4 +1,5 @@
 <?php
+// Solo se pueden pedir los logotipos incluidos en esta lista.
 $logos = [
     'pokemon-go' => 'pokemon-go.svg',
     'valorant' => 'valorant.svg',
@@ -21,6 +22,7 @@ if (!isset($logos[$marca])) {
     exit;
 }
 
+// Comprueba que el archivo exista antes de enviarlo al navegador.
 $ruta = __DIR__ . DIRECTORY_SEPARATOR . $logos[$marca];
 if (!is_file($ruta) || !is_readable($ruta)) {
     http_response_code(500);

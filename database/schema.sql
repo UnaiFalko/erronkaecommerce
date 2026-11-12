@@ -1,7 +1,7 @@
 -- =====================================================================
--- E-commerce datu-basea (MySQL / MariaDB)
--- 3.3.2: E-R eredua taula fisiko gisa (CREATE TABLE) .sql fitxategian
--- Erabilera:  mysql -u root -p < database/schema.sql
+-- Base de datos de la tienda (MySQL / MariaDB).
+-- Crea las tablas y carga los datos de demostración.
+-- Uso: mysql -u root -p < database/schema.sql
 -- =====================================================================
 
 CREATE DATABASE IF NOT EXISTS ecommerce
@@ -9,7 +9,7 @@ CREATE DATABASE IF NOT EXISTS ecommerce
 USE ecommerce;
 SET NAMES utf8mb4;
 
--- ---------- ERABILTZAILEAK ----------
+-- ---------- USUARIOS ----------
 CREATE TABLE IF NOT EXISTS erabiltzaileak (
     id             INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     izena          VARCHAR(100) NOT NULL,
@@ -19,13 +19,13 @@ CREATE TABLE IF NOT EXISTS erabiltzaileak (
     sortze_data    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- ---------- KATEGORIAK ----------
+-- ---------- CATEGORÍAS ----------
 CREATE TABLE IF NOT EXISTS kategoriak (
     id    INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     izena VARCHAR(100) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
--- ---------- PRODUKTUAK (1 kategoria -> N produktu) ----------
+-- ---------- PRODUCTOS (una categoría puede tener varios productos) ----------
 CREATE TABLE IF NOT EXISTS produktuak (
     id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     izena         VARCHAR(150) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS produktuak (
     INDEX idx_prod_kat (kategoria_id)
 ) ENGINE=InnoDB;
 
--- ---------- ESKAERAK (1 erabiltzaile -> N eskaera) ----------
+-- ---------- PEDIDOS (un usuario puede tener varios pedidos) ----------
 CREATE TABLE IF NOT EXISTS eskaerak (
     id               INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     erabiltzailea_id INT UNSIGNED NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS eskaerak (
     INDEX idx_esk_erab (erabiltzailea_id)
 ) ENGINE=InnoDB;
 
--- ---------- ESKAERA_LERROAK (eskaera N <-> N produktua) ----------
+-- ---------- LÍNEAS DEL PEDIDO (productos y cantidades compradas) ----------
 CREATE TABLE IF NOT EXISTS eskaera_lerroak (
     id                INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     eskaera_id        INT UNSIGNED NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS eskaera_lerroak (
     INDEX idx_lerro_prod (produktua_id)
 ) ENGINE=InnoDB;
 
--- ---------- KONTU DIGITALAK (eskaera bakoitzeko kredentzial bakarrak) ----------
+-- ---------- CUENTAS DIGITALES (credenciales cifradas y entregas) ----------
 CREATE TABLE IF NOT EXISTS cuentas_digitales (
     id                  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     producto_id         INT UNSIGNED NOT NULL,
@@ -99,8 +99,8 @@ CREATE TABLE IF NOT EXISTS cuentas_demo_importadas (
 ) ENGINE=InnoDB;
 
 -- =====================================================================
--- PROBA-DATUAK
--- Admin: admin@denda.eus  /  pasahitza: admin123
+-- DATOS DE DEMOSTRACIÓN
+-- Administrador de prueba: admin@denda.eus / contraseña: admin123
 -- =====================================================================
 INSERT INTO erabiltzaileak (izena, email, pasahitza_hash, rola) VALUES
 ('Administratzailea', 'admin@denda.eus',

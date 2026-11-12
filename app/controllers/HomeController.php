@@ -1,6 +1,8 @@
 <?php
+/** Acciones de la página principal: catálogo y productos favoritos. */
 class HomeController extends Controller
 {
+    /** Filtra y muestra el catálogo. */
     public function indexAction(): void
     {
         $kategoriaId = isset($_GET['kategoria']) ? (int) $_GET['kategoria'] : null;
@@ -32,6 +34,7 @@ class HomeController extends Controller
         ]);
     }
 
+    /** Añade o quita un producto de favoritos. */
     public function favoritoAction(): void
     {
         if (!$this->isPost()) {
